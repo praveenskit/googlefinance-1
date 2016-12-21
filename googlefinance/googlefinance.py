@@ -4,15 +4,11 @@ import urllib2, json, time
 
 
 
-
-
 class Utils(object):
 
 	@staticmethod
 	def request(symbol):
-
-		request = 'http://www.google.com/finance/info?infotype=infoquoteall&q=' + symbol
-		
+		request = 'http://www.google.com/finance/info?infotype=infoquoteall&q=' + symbol		
 		try:
 			content =json.loads( urlopen(Request(request)).read().decode('utf-8')[4:])
 		except urllib2.HTTPError, err:
@@ -21,7 +17,6 @@ class Utils(object):
 		else:
 			return content
 
-
 	@staticmethod
 	def get_value(content, key):
 		return content[0][key]
@@ -29,11 +24,9 @@ class Utils(object):
 
 
 
-
-class Stock():
+class Stock(object):
 
 	def __init__(self, symbol):
-
 		data = Utils.request(symbol)
 		if data == False:
 			raise Exception
@@ -44,11 +37,9 @@ class Stock():
 			self._name      = Utils.get_value(data, 'name')
 			self._type      = Utils.get_value(data, 'type')
 
-
 	def getCurrentPrice(self):
 		data = Utils.request(self._symbol)
 		return Utils.get_value(data, 'l')
-
 
 	def getValue(self, value):
 		data  = Utils.request(self._symbol)
@@ -57,18 +48,16 @@ class Stock():
 
 
 
+class Historical(object):
 
-
-class Historical(Stock):
-
+	string = 'http://www.google.com/finance/historical?q=NASDAQ%3AGOOG&ei=ZbBaWKH9NNKQUpeahrAM&output=csv'
 
 	@staticmethod
-	def getHistorical():
+	def getHistorical(Stock, startDate, endDate):
 		print 'gh'
 
-
 	@staticmethod
-	def saveHistorical():
+	def saveHistorical(Stock, timeframe):
 		print 'sh'
 
 
@@ -93,7 +82,6 @@ print 'fb price: ' + fb.getCurrentPrice()
 print 'msft hi52: ' + msft.getValue('hi52')
 print 'msft lo52: ' + msft.getValue('lo52')
 
-msft.getHistorical()
 
 # TODO :
 # - multiple stocks, move to list/array, and call prices only once using concatonated request string
